@@ -27,3 +27,9 @@ func (h *Handler) Ping(c *gin.Context) {
 		"message": "pong",
 	})
 }
+
+func (h *Handler) API(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": "API version 1",
+	})
+}

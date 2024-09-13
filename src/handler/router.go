@@ -48,20 +48,20 @@ func SetupRouter() *gin.Engine {
 	handler := NewHandler(services)
 
 	// Routes
-	r.GET("/ping", handler.Ping)
+	//r.GET("/ping", handler.Ping)
 
 	// swagger
 	swagger := ginSwagger.URL("/swagger/doc.json") // The url pointing to API definition
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swagger))
 
-	// app := r.Group("/api/v1")
 
-	// auth := app.Group("auth")
-	// {
-	// 	 auth.POST("singup", handler.SignUp)
-	// 	 auth.POST("signin", handler.SignIn)
-	// 	 auth.POST("signout", handler.SignOut)
-	// }
+	auth := r.Group("auth")
+	{
+		auth.POST("singup", handler.SignUp)
+		auth.POST("signin", handler.SignIn)
+		auth.POST("signout", handler.SignOut)
+	}
+
 
 	// app.Use(middlewares.Auth())
 	// url := app.Group("url")

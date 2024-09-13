@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"jas/models"
 	"time"
 )
 
@@ -10,7 +11,11 @@ type StorageI interface {
 }
 
 type UserI interface {
-	FindUserByID(id int) (string, error)
+	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
+	UpdateUser(ctx context.Context, user *models.User) (*models.User, error)
+	DeleteUser(ctx context.Context, urerID string) error
+	GetUserByID(ctx context.Context, id string) (*models.User, error)
+	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
 }
 
 type CacheStorageI interface {
