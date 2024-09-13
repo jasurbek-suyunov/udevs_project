@@ -87,8 +87,8 @@ func (h *Handler) SignIn(c *gin.Context) {
 		Data: &models.UserResponse{
 			ID:        user.ID,
 			Username:  user.Username,
-			FirstName: user.FirstName,
-			LastName:  user.LastName,
+			FullName:  user.FullName,
+			Bio: 	  user.Bio,
 			Email:     user.Email,
 			CreatedAt: user.CreatedAt,
 		},

@@ -14,7 +14,7 @@ type userRepo struct {
 
 const (
 	userTable  = "users"
-	userFields = `id, username, first_name, last_name, email, password_hash, created_at`
+	userFields = `id, username, full_name,bio, email, password_hash, created_at`
 )
 
 // CreateUser implements repository.UserI
@@ -24,23 +24,23 @@ func (u *userRepo) CreateUser(ctx context.Context, usr *models.User) (*models.Us
 	resp := models.User{}
 
 	// query
-	query := `INSERT INTO users(username, first_name, last_name, email, password_hash, created_at) 
+	query := `INSERT INTO users(username, full_name,bio, email, password_hash, created_at) 
 	VALUES ($1, $2, $3, $4, $5, $6) RETURNING ` + userFields
 
 	// exec and scan
 	err := u.db.QueryRow(
 		query,
 		usr.Username,
-		usr.FirstName,
-		usr.LastName,
+		usr.FullName,
+		usr.Bio,
 		usr.Email,
 		usr.PasswordHash,
 		usr.CreatedAt,
 	).Scan(
 		&resp.ID,
 		&resp.Username,
-		&resp.FirstName,
-		&resp.LastName,
+		&resp.FullName,
+		&resp.Bio,
 		&resp.Email,
 		&resp.PasswordHash,
 		&resp.CreatedAt,
@@ -97,8 +97,8 @@ func (u *userRepo) GetUserByID(ctx context.Context, id string) (*models.User, er
 	).Scan(
 		&result.ID,
 		&result.Username,
-		&result.FirstName,
-		&result.LastName,
+		&result.FullName,
+		&result.Bio,
 		&result.Email,
 		&result.PasswordHash,
 		&result.CreatedAt,
@@ -128,8 +128,8 @@ func (u *userRepo) GetUserByUsername(ctx context.Context, username string) (*mod
 	).Scan(
 		&result.ID,
 		&result.Username,
-		&result.FirstName,
-		&result.LastName,
+		&result.FullName,
+		&result.Bio,
 		&result.Email,
 		&result.PasswordHash,
 		&result.CreatedAt,
@@ -152,22 +152,22 @@ func (u *userRepo) UpdateUser(ctx context.Context, user *models.User) (*models.U
 	var result models.User
 
 	// query
-	query := `UPDATE users SET username = $1, first_name = $2, last_name = $3, email = $4 WHERE id = $5 RETURNING ` + userFields
+	query := `UPDATE users SET username = $1, full_name = $2, bio = $3, email = $4 WHERE id = $5 RETURNING ` + userFields
 
 	// exec and scan
 	err := u.db.QueryRowContext(
 		ctx,
 		query,
 		user.Username,
-		user.FirstName,
-		user.LastName,
+		user.FullName,
+		user.Bio,
 		user.Email,
 		user.ID,
 	).Scan(
 		&result.ID,
 		&result.Username,
-		&result.FirstName,
-		&result.LastName,
+		&result.FullName,
+		&result.Bio,
 		&result.Email,
 		&result.PasswordHash,
 		&result.CreatedAt,

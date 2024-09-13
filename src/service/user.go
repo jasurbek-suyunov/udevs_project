@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"jas/helper"
 	"jas/models"
 	"time"
@@ -21,8 +22,8 @@ func (s *Service) CreateUser(ctx context.Context, user *models.UserSignUpRequest
 	// create user
 	result, err := s.storage.User().CreateUser(ctx, &models.User{
 		Username:     user.Username,
-		FirstName:    user.FirstName,
-		LastName:     user.LastName,
+		FullName:     user.FullName,
+		Bio:          user.Bio,
 		Email:        user.Email,
 		PasswordHash: pass_hash,
 		CreatedAt:    time.Now().Unix(),
@@ -38,9 +39,11 @@ func (s *Service) CreateUser(ctx context.Context, user *models.UserSignUpRequest
 	// check error
 	if err != nil {
 		return err
-	}
+	}	
+	fmt.Println("user_string", string(user_string))
+	fmt.Println("result.Username", result.Username)
 	// set username and user
-	err = s.cache.Redis().Set(ctx, result.Username, string(user_string), 0)
+	err = s.cache.Redis().Set(ctx, result.Username, string(user_string), time.Hour*24)
 
 	// check error
 	if err != nil {
