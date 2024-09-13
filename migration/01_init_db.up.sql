@@ -19,11 +19,12 @@ CREATE TABLE tweets (
 );
 
 CREATE TABLE followers (
-    follower_id INT REFERENCES users(id) ON DELETE CASCADE,
-    followed_id INT REFERENCES users(id) ON DELETE CASCADE,
-    created_at INT NOT NULL,
-    PRIMARY KEY(follower_id, followed_id)
+    id SERIAL PRIMARY KEY,
+    follower_id INT REFERENCES users(id) ON DELETE CASCADE,  -- Kuzatuvchi foydalanuvchi IDsi
+    following_id INT REFERENCES users(id) ON DELETE CASCADE, -- Kuzatilayotgan foydalanuvchi IDsi
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP            -- Kuzatish qachon amalga oshirilganligi
 );
+
 
 CREATE TABLE likes (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,

@@ -39,3 +39,7 @@ type UserLoginRequest struct {
 	Username string `json:"username" binding:"required" db:"username"`
 	Password string `json:"password" binding:"required" db:"password"`
 }
+
+type FollowRequest struct {
+	FollowedID int `json:"followed_id" binding:"required" db:"followed_id"`
+}

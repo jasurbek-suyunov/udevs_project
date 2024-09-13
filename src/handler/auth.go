@@ -88,7 +88,7 @@ func (h *Handler) SignIn(c *gin.Context) {
 			ID:        user.ID,
 			Username:  user.Username,
 			FullName:  user.FullName,
-			Bio: 	  user.Bio,
+			Bio:       user.Bio,
 			Email:     user.Email,
 			CreatedAt: user.CreatedAt,
 		},

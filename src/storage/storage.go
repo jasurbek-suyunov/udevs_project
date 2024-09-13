@@ -8,16 +8,31 @@ import (
 
 type StorageI interface {
 	User() UserI
+	Tweet() TweetI
 }
 
 type UserI interface {
+	// user
 	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
 	UpdateUser(ctx context.Context, user *models.User) (*models.User, error)
 	DeleteUser(ctx context.Context, urerID string) error
 	GetUserByID(ctx context.Context, id string) (*models.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
+	// follow
+	FollowUser(ctx context.Context, followerID, followingID int) error
+	UnFollowUser(ctx context.Context, followerID, followingID int) error
+	IsFollowing(ctx context.Context, followerID, followingID int) (bool, error)
+	GetFollowers(ctx context.Context, userID int) ([]models.User, error)
+	GetFollowing(ctx context.Context, userID int) ([]models.User, error)
 }
 
+type TweetI interface {
+	CreateTweet(ctx context.Context, tweet *models.Tweet) (*models.Tweet, error)
+	UpdateTweet(ctx context.Context, tweet *models.Tweet) (*models.Tweet, error)
+	DeleteTweet(ctx context.Context, tweetID string) error
+	GetTweetByID(ctx context.Context, id string) (*models.Tweet, error)
+	GetTweets(ctx context.Context, userID string) ([]models.Tweet, error)
+}
 type CacheStorageI interface {
 	Redis() RedisI
 }

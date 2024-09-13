@@ -3,8 +3,11 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"log"
+	"fmt"
 	"jas/models"
+	"log"
+	"time"
+
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,6 +19,74 @@ const (
 	userTable  = "users"
 	userFields = `id, username, full_name,bio, email, password_hash, created_at`
 )
+
+
+// FollowUser implements storage.UserI.
+func (u *userRepo) FollowUser(ctx context.Context, followerID int, followingID int) error {
+	fmt.Println("(((((((((((FollowerID))))))))))))))): ", followerID)
+	query := `INSERT INTO followers (follower_id, following_id, created_at) 
+	VALUES ($1, $2, $3)`
+	_, err := u.db.Exec(query, followerID, followingID, time.Now().Unix())
+	if err != nil {
+		log.Printf("Method: FollowUser, Error: %v", err)
+		return err
+	}
+	return nil
+}
+
+// GetFollowers implements storage.UserI.
+func (u *userRepo) GetFollowers(ctx context.Context, userID int) ([]models.User, error) {
+	var users []models.User
+	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email, u.password_hash, u.created_at
+	FROM users u
+	JOIN followers f ON u.id = f.follower_id
+	WHERE f.following_id = $1`
+	err := u.db.Select(&users, query, userID)
+	if err != nil {
+		log.Printf("Method: GetFollowers, Error: %v", err)
+		return nil, err
+	}
+	return users, nil
+}
+
+// GetFollowing implements storage.UserI.
+func (u *userRepo) GetFollowing(ctx context.Context, userID int) ([]models.User, error) {
+	var users []models.User
+	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email, u.password_hash, u.created_at
+	FROM users u
+	JOIN followers f ON u.id = f.following_id
+	WHERE f.follower_id = $1`
+	err := u.db.Select(&users, query, userID)
+	if err != nil {
+		log.Printf("Method: GetFollowing, Error: %v", err)
+		return nil, err
+	}
+	return users, nil
+}
+
+// IsFollowing implements storage.UserI.
+func (u *userRepo) IsFollowing(ctx context.Context, followerID int, followingID int) (bool, error) {
+	var exists bool
+	query := `SELECT EXISTS(SELECT 1 FROM followers WHERE follower_id = $1 AND following_id = $2)`
+
+	err := u.db.QueryRow(query, followerID, followingID).Scan(&exists)
+	if err != nil {
+		log.Printf("Method: IsFollowing, Error: %v", err)
+		return false, err
+	}
+	return exists, nil
+}
+
+// UnFollowUser implements storage.UserI.
+func (u *userRepo) UnFollowUser(ctx context.Context, followerID int, followingID int) error {
+	query := `DELETE FROM followers WHERE follower_id = $1 AND following_id = $2`
+	_, err := u.db.Exec(query, followerID, followingID)
+	if err != nil {
+		log.Printf("Method: UnFollowUser, Error: %v", err)
+		return err
+	}
+	return nil
+}
 
 // CreateUser implements repository.UserI
 func (u *userRepo) CreateUser(ctx context.Context, usr *models.User) (*models.User, error) {

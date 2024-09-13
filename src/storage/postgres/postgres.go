@@ -15,6 +15,7 @@ import (
 type Storage struct {
 	db *sqlx.DB
 	user storage.UserI
+	tweet storage.TweetI
 }
 func NewPostgres(cfg *config.Config) (storage.StorageI, error) {
 	psqlConnString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
@@ -49,4 +50,11 @@ func (s *Storage) User() storage.UserI {
 		s.user = NewUserRepo(s.db)
 	}
 	return s.user
+}
+
+func (s *Storage) Tweet() storage.TweetI {
+	if s.tweet == nil {
+		s.tweet = NewTweetRepo(s.db)
+	}
+	return s.tweet
 }
