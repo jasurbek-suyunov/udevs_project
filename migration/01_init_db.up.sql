@@ -10,3 +10,32 @@ CREATE TABLE IF NOT EXISTS "users" (
     "created_at" INT NOT NULL
 );
 
+CREATE TABLE tweets (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    media_url TEXT, -- optional media (image/video)
+    created_at INT NOT NULL
+);
+
+CREATE TABLE followers (
+    follower_id INT REFERENCES users(id) ON DELETE CASCADE,
+    followed_id INT REFERENCES users(id) ON DELETE CASCADE,
+    created_at INT NOT NULL,
+    PRIMARY KEY(follower_id, followed_id)
+);
+
+CREATE TABLE likes (
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    tweet_id INT REFERENCES tweets(id) ON DELETE CASCADE,
+    created_at INT NOT NULL,
+    PRIMARY KEY(user_id, tweet_id)
+);
+
+CREATE TABLE retweets (
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    tweet_id INT REFERENCES tweets(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(user_id, tweet_id)
+);
+
