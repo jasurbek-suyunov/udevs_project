@@ -2,7 +2,6 @@ package redis
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -45,7 +44,6 @@ func (c *cache) Get(ctx context.Context, key string) (value string, err error) {
 
 // Set implements storage.RedisI
 func (c *cache) Set(ctx context.Context, key string, value string, expTime time.Duration) error {
-	fmt.Println("expTime: ", expTime)
 	resp := c.rdb.Set(ctx, key, value, expTime*time.Second)
 	if resp.Err() != nil {
 		return resp.Err()

@@ -1,5 +1,9 @@
 package models
 
+import (
+	"database/sql"
+)
+
 type Error struct {
 	Error string `json:"error"`
 }
@@ -31,4 +35,15 @@ type DefaultResponse struct {
 type Token struct {
 	UserId    string `json:"user_id"`
 	UserAgent string `json:"user_agent"`
+}
+
+type SearchResult struct {
+	Type         string         `db:"type"` // 'user' yoki 'tweet'
+	ID           int            `db:"id"`
+	Username     string         `db:"username"`
+	Content      sql.NullString `db:"content,omitempty"` // Tvit bo'lsa, content qaytadi
+	FullName     sql.NullString `db:"full_name,omitempty"`
+	Bio          sql.NullString `db:"bio,omitempty"` // Foydalanuvchi bo'lsa, bio
+	ProfileImage sql.NullString `db:"profile_image_url,omitempty"`
+	CreatedAt    sql.NullInt32 `db:"created_at,omitempty"`
 }

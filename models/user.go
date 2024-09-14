@@ -43,3 +43,20 @@ type UserLoginRequest struct {
 type FollowRequest struct {
 	FollowedID int `json:"followed_id" binding:"required" db:"followed_id"`
 }
+type FollowResponse struct {
+	FollowedID int `json:"followed_id" db:"followed_id"`
+}
+
+type UnFollowRequest struct {
+	FollowedID int `json:"followed_id" binding:"required" db:"followed_id"`
+}
+
+type Follow struct {
+	ID           string `json:"id" db:"id"`
+	Username     string `json:"username" db:"username"`
+	FullName     string `json:"full_name" db:"full_name"`
+	Bio 		string `json:"bio" db:"bio"`
+	Email        string `json:"email" db:"email"`
+	ProfileImageURL string `json:"profile_image_url" db:"profile_image_url"`
+	CreatedAt    int64  `json:"created_at" db:"created_at"`
+}

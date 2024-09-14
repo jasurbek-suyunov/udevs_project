@@ -70,6 +70,15 @@ func SetupRouter() *gin.Engine {
 	tweet := r.Group("tweet")
 	{
 		tweet.POST("", handler.CreateTweet)
+		tweet.GET("", handler.GetTweets)
+		tweet.GET(":id", handler.GetTweetByID)
+		tweet.PUT(":id",handler.UpdateTweet)
+		tweet.DELETE(":id", handler.DeleteTweet)
+		tweet.GET("user/:id", handler.GetTweetsByUserID)
+		tweet.POST("like/:tweet_id",handler.LikeTweet)
+		tweet.POST("unlike/:tweet_id",handler.UnLikeTweet)
+		tweet.POST("retweet/:tweet_id",handler.RetweetTweet)
+		tweet.POST("unretweet/:tweet_id",handler.UnRetweetTweet)
 	}
 
 	// user routes
@@ -77,10 +86,18 @@ func SetupRouter() *gin.Engine {
 	{
 		user.POST("follow", handler.FollowUser)
 		user.POST("unfollow", handler.UnFollowUser)
-		user.GET("isfollowing", handler.IsFollowing)
 		user.GET("followers", handler.GetFollowers)
 		user.GET("following", handler.GetFollowing)
+		user.GET("following/:user_id", handler.GetFollowingByUserID)
+		user.GET("followers/:user_id", handler.GetFollowersByUserID)
 	}
+
+	// search routes
+	search := r.Group("search")
+	{
+		search.GET("", handler.Search)
+	}
+	
 
 	return r
 }

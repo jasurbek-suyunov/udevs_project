@@ -11,11 +11,13 @@ func Auth() gin.HandlerFunc {
 		tokenString, err := c.Cookie("token")
 		if err != nil {
 			c.AbortWithStatusJSON(401, gin.H{"error": "No token found"})
+			return
 		}
 
 		param, err := helper.ValidateJWT(tokenString)
 		if err != nil {
 			c.AbortWithStatusJSON(401, gin.H{"error": err.Error()})
+			return
 		}
 		c.Set("user_id", param.UserId)
 		c.Next()
