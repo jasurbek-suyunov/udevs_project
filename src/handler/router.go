@@ -10,8 +10,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // SetupRouter sets up the router for the application.
@@ -51,9 +49,6 @@ func SetupRouter() *gin.Engine {
 	//routes
 	r.GET("/ping", handler.Ping)
 
-	// swagger
-	swagger := ginSwagger.URL("/swagger/doc.json") // The url pointing to API definition
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swagger))
 	
 	// auth routes
 	auth := r.Group("auth")
@@ -97,7 +92,7 @@ func SetupRouter() *gin.Engine {
 	{
 		search.GET("", handler.Search)
 	}
-	
+
 
 	return r
 }

@@ -26,7 +26,7 @@ type UserI interface {
 	GetFollowing(ctx context.Context, userID int) ([]models.Follow, error)
 	GetFollowingList(ctx context.Context, userID int) ([]models.Follow, error)
 	GetFollowersList(ctx context.Context, userID int) ([]models.Follow, error)
-	//search
+	// search
 	Search(ctx context.Context, query string) ([]models.SearchResult, error)
 }
 

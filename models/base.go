@@ -38,12 +38,12 @@ type Token struct {
 }
 
 type SearchResult struct {
-	Type         string         `db:"type"` // 'user' yoki 'tweet'
+	Type         string         `db:"type"` 
 	ID           int            `db:"id"`
 	Username     string         `db:"username"`
-	Content      sql.NullString `db:"content,omitempty"` // Tvit bo'lsa, content qaytadi
+	Content      sql.NullString `db:"content,omitempty"` 
 	FullName     sql.NullString `db:"full_name,omitempty"`
-	Bio          sql.NullString `db:"bio,omitempty"` // Foydalanuvchi bo'lsa, bio
+	Bio          sql.NullString `db:"bio,omitempty"` 
 	ProfileImage sql.NullString `db:"profile_image_url,omitempty"`
 	CreatedAt    sql.NullInt32 `db:"created_at,omitempty"`
 }
