@@ -14,7 +14,8 @@ import (
 
 // SetupRouter sets up the router for the application.
 func SetupRouter(cnf *config.Config) *gin.Engine {
-	r := gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	r := gin.New()
 
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -64,8 +65,11 @@ func SetupRouter(cnf *config.Config) *gin.Engine {
 	//auth middleware
 	r.Use(middleware.Auth())
 
+	//api version v1 routes
+	api := r.Group("api/v1")
+
 	// twit routes
-	twit := r.Group("twit")
+	twit := api.Group("twit")
 	{
 		twit.GET("", handler.GetTwits)
 		twit.POST("", handler.CreateTwit)
@@ -80,7 +84,7 @@ func SetupRouter(cnf *config.Config) *gin.Engine {
 	}
 
 	// user routes
-	user := r.Group("user")
+	user := api.Group("user")
 	{
 		user.POST("upload", handler.UploadProfileImage)
 		user.POST("follow", handler.FollowUser)
@@ -92,7 +96,7 @@ func SetupRouter(cnf *config.Config) *gin.Engine {
 	}
 
 	// search routes
-	search := r.Group("search")
+	search := api.Group("search")
 	{
 		search.GET("", handler.Search)
 	}
