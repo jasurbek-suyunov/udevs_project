@@ -2,10 +2,10 @@ package handler
 
 import (
 	"jas/config"
+	"jas/middleware"
 	"jas/src/service"
 	"jas/src/storage/postgres"
 	"jas/src/storage/redis"
-	"jas/middleware"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -16,17 +16,25 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	// get configs
-	cnf := config.NewConfig()
-	r.Static("/uploads", "./uploads")
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message": "page not found",
 		})
 	})
+
+	// get configs
+	cnf := config.NewConfig()
+
+	//amazon s3 storage
+	err := connectS3(cnf)
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Println("aws3 connected")
+	}
+
 	// get db
 	db, err := postgres.NewPostgres(cnf)
-	// check error
 	if err != nil {
 		log.Println(err)
 	} else {
@@ -35,7 +43,6 @@ func SetupRouter() *gin.Engine {
 
 	// get redis
 	redis, err := redis.NewRedisCache(cnf)
-	// check error
 	if err != nil {
 		log.Println(err)
 	} else {
@@ -49,7 +56,6 @@ func SetupRouter() *gin.Engine {
 	//routes
 	r.GET("/ping", handler.Ping)
 
-	
 	// auth routes
 	auth := r.Group("auth")
 	{
@@ -64,16 +70,16 @@ func SetupRouter() *gin.Engine {
 	// tweet routes
 	tweet := r.Group("tweet")
 	{
-		tweet.POST("", handler.CreateTweet)
 		tweet.GET("", handler.GetTweets)
+		tweet.POST("", handler.CreateTweet)
+		tweet.PUT(":id", handler.UpdateTweet)
 		tweet.GET(":id", handler.GetTweetByID)
-		tweet.PUT(":id",handler.UpdateTweet)
 		tweet.DELETE(":id", handler.DeleteTweet)
 		tweet.GET("user/:id", handler.GetTweetsByUserID)
-		tweet.POST("like/:tweet_id",handler.LikeTweet)
-		tweet.POST("unlike/:tweet_id",handler.UnLikeTweet)
-		tweet.POST("retweet/:tweet_id",handler.RetweetTweet)
-		tweet.POST("unretweet/:tweet_id",handler.UnRetweetTweet)
+		tweet.POST("like/:tweet_id", handler.LikeTweet)
+		tweet.POST("unlike/:tweet_id", handler.UnLikeTweet)
+		tweet.POST("retweet/:tweet_id", handler.RetweetTweet)
+		tweet.POST("unretweet/:tweet_id", handler.UnRetweetTweet)
 	}
 
 	// user routes
@@ -92,7 +98,6 @@ func SetupRouter() *gin.Engine {
 	{
 		search.GET("", handler.Search)
 	}
-
 
 	return r
 }

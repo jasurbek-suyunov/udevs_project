@@ -47,3 +47,10 @@ type SearchResult struct {
 	ProfileImage sql.NullString `db:"profile_image_url,omitempty"`
 	CreatedAt    sql.NullInt32 `db:"created_at,omitempty"`
 }
+
+type Amazons3Config struct {
+	AccessKey string `json:"access_key"`
+	SecretKey string `json:"secret_key"`
+	Region    string `json:"region"`
+	Bucket    string `json:"bucket"`
+}

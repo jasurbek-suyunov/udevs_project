@@ -35,6 +35,11 @@ type Config struct {
 	RefreshTokenName string
 	RefreshTokenTTL  string // in minutes
 
+	Amazons3AccessKey string
+	Amazons3SecretKey string
+	Amazons3Region    string
+	Amazons3Bucket    string
+
 }
 
 func getOrReturnDefaultValue(key string, defaultValue interface{}) interface{} {
@@ -72,6 +77,11 @@ func NewConfig() *Config {
 	cnf.RedisPassword = getOrReturnDefaultValue("REDIS_PASSWORD", "").(string)
 	cnf.RedisPoolSize = getOrReturnDefaultValue("REDIS_POOL_SIZE", "10").(string)
 	cnf.RedisExpiryTime = getOrReturnDefaultValue("REDIS_EXPIRY_TIME", "10").(string)
+	//amazons3
+	cnf.Amazons3AccessKey = getOrReturnDefaultValue("AWS_ACCESS_KEY_ID", "").(string)
+	cnf.Amazons3SecretKey = getOrReturnDefaultValue("AWS_SECRET_ACCESS_KEY", "").(string)
+	cnf.Amazons3Region = getOrReturnDefaultValue("AWS_REGION", "").(string)
+	cnf.Amazons3Bucket = getOrReturnDefaultValue("AWS_BUCKET_NAME", "").(string)
 
 	return &cnf
 }

@@ -2,22 +2,35 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"jas/helper"
 	"jas/models"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) CreateTweet(c *gin.Context) {
-	// variable
-	var tweet models.TweetRequest
-
-	// bind
-	if err := c.ShouldBindJSON(&tweet); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	// Parse form file
+	file, fileHeader, err := c.Request.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No file is received"})
 		return
 	}
-
+	defer file.Close()
+	// get "tweet" from the form data
+	tweet := c.PostForm("tweet")
+	fmt.Println(tweet)
+	// Folder name where the file will be saved
+	folder := "test"
+	// Upload to S3
+	// how to use .png or .jpg or video file
+	fmt.Println(fileHeader.Filename)
+	fileURL, err := uploadToS3(file, fileHeader, folder)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	//get user id
 	userID, ok := c.Get("user_id")
 	if !ok {
@@ -27,8 +40,8 @@ func (h *Handler) CreateTweet(c *gin.Context) {
 
 	var tweetModel = models.Tweet{
 		UserID:    userID.(string),
-		Content:   tweet.Content,
-		MediaUrl:  tweet.MediaUrl,
+		Content:   tweet,
+		MediaUrl:  fileURL,
 		CreatedAt: helper.GetCurrentTime(),
 	}
 
@@ -181,8 +194,8 @@ func (h *Handler) LikeTweet(c *gin.Context) {
 		return
 	}
 
-	err :=h.services.LikeTweet(c,userID.(string),tweetID)
-	if err!= nil {
+	err := h.services.LikeTweet(c, userID.(string), tweetID)
+	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
@@ -205,8 +218,8 @@ func (h *Handler) UnLikeTweet(c *gin.Context) {
 		return
 	}
 
-	err :=h.services.UnLikeTweet(c,userID.(string),tweetID)
-	if err!= nil {
+	err := h.services.UnLikeTweet(c, userID.(string), tweetID)
+	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
@@ -229,8 +242,8 @@ func (h *Handler) RetweetTweet(c *gin.Context) {
 		return
 	}
 
-	err :=h.services.RetweetTweet(c,userID.(string),tweetID)
-	if err!= nil {
+	err := h.services.RetweetTweet(c, userID.(string), tweetID)
+	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
@@ -253,8 +266,8 @@ func (h *Handler) UnRetweetTweet(c *gin.Context) {
 		return
 	}
 
-	err :=h.services.UnRetweetTweet(c,userID.(string),tweetID)
-	if err!= nil {
+	err := h.services.UnRetweetTweet(c, userID.(string), tweetID)
+	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}

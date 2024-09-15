@@ -57,8 +57,6 @@ func NewRedisCache(cfg *config.Config) (storage.CacheStorageI, error) {
 	_, err := pong.Result()
 	if err != nil {
 		return nil, errors.New("cannot connect to redis")
-	} else {
-		fmt.Println("connected to redis")
 	}
 
 	// ...4: returning redis cache db

@@ -25,7 +25,6 @@ func NewPostgres(cfg *config.Config) (storage.StorageI, error) {
 		cfg.PostgresDatabase,
 		cfg.PostgresPassword,
 	)
-	fmt.Println(psqlConnString)
 	db, err := sqlx.Open("postgres", psqlConnString)
 	if err != nil {
 		log.Fatalf("cannot connect to postgresql db: %s", err.Error())
