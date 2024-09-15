@@ -34,8 +34,8 @@ func (u *userRepo) Search(ctx context.Context, query string) ([]models.SearchRes
 		FROM users 
 		WHERE username ILIKE '%' || $1 || '%' OR full_name ILIKE '%' || $1 || '%' 
 		UNION 
-		SELECT 'tweet' AS type, t.id, u.username, NULL AS full_name, NULL AS bio, NULL AS profile_image_url, t.content, t.created_at 
-		FROM tweets t 
+		SELECT 'twit' AS type, t.id, u.username, NULL AS full_name, NULL AS bio, NULL AS profile_image_url, t.content, t.created_at 
+		FROM twits t 
 		JOIN users u ON u.id = t.user_id 
 		WHERE t.content ILIKE '%' || $1 || '%';
 

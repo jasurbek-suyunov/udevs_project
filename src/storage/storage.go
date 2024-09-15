@@ -8,7 +8,7 @@ import (
 
 type StorageI interface {
 	User() UserI
-	Tweet() TweetI
+	Twit() TwitI
 }
 
 type UserI interface {
@@ -30,19 +30,19 @@ type UserI interface {
 	Search(ctx context.Context, query string) ([]models.SearchResult, error)
 }
 
-type TweetI interface {
-	// tweet
-	CreateTweet(ctx context.Context, tweet *models.Tweet) (*models.Tweet, error)
-	UpdateTweet(ctx context.Context, tweet *models.Tweet) (*models.Tweet, error)
-	DeleteTweet(ctx context.Context, tweetID string) error
-	GetTweetByID(ctx context.Context, id string) (*models.Tweet, error)
-	GetTweetsByUserID(ctx context.Context, userID string) ([]models.Tweet, error)
-	GetTweets(ctx context.Context, userID string) ([]models.Tweet, error)
-	CanModifyTweet(ctx context.Context, userID string, tweetID string) (bool, error)
-	LikeTweet(ctx context.Context, userID string, tweetID string) error
-	UnlikeTweet(ctx context.Context, userID string, tweetID string) error
-	RetweetTweet(ctx context.Context, userID string, tweetID string) error
-	UnRetweetTweet(ctx context.Context, userID string, tweetID string) error
+type TwitI interface {
+	// twit
+	CreateTwit(ctx context.Context, twit *models.Twit) (*models.Twit, error)
+	UpdateTwit(ctx context.Context, twit *models.Twit) (*models.Twit, error)
+	DeleteTwit(ctx context.Context, twitID string) error
+	GetTwitByID(ctx context.Context, id string) (*models.Twit, error)
+	GetTwitsByUserID(ctx context.Context, userID string) ([]models.Twit, error)
+	GetTwits(ctx context.Context, userID string) ([]models.Twit, error)
+	CanModifyTwit(ctx context.Context, userID string, twitID string) (bool, error)
+	LikeTwit(ctx context.Context, userID string, twitID string) error
+	UnlikeTwit(ctx context.Context, userID string, twitID string) error
+	RetwitTwit(ctx context.Context, userID string, twitID string) error
+	UnRetwitTwit(ctx context.Context, userID string, twitID string) error
 }
 type CacheStorageI interface {
 	Redis() RedisI

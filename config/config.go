@@ -1,25 +1,24 @@
 package config
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-
 	HTTPPort string
 	HTTPHost string
 
-	PostgresHost     string
-	PostgresPort     string
-	PostgresUser     string
-	PostgresPassword string
-	PostgresDatabase string
+	PostgresHost            string
+	PostgresPort            string
+	PostgresUser            string
+	PostgresPassword        string
+	PostgresDatabase        string
 	PostgresMaxConnections  string
 	PostgresConnMaxIdleTime string // in minutes
-	
+
 	SecretKey string
 
 	RedisHost       string
@@ -39,7 +38,6 @@ type Config struct {
 	Amazons3SecretKey string
 	Amazons3Region    string
 	Amazons3Bucket    string
-
 }
 
 func getOrReturnDefaultValue(key string, defaultValue interface{}) interface{} {
@@ -54,7 +52,7 @@ func getOrReturnDefaultValue(key string, defaultValue interface{}) interface{} {
 
 func NewConfig() *Config {
 	if err := godotenv.Load(); err != nil {
-		fmt.Println("No .env file found")
+		log.Fatalf("Error loading .env file")
 	}
 
 	cnf := Config{}

@@ -64,19 +64,19 @@ func SetupRouter(cnf *config.Config) *gin.Engine {
 	//auth middleware
 	r.Use(middleware.Auth())
 
-	// tweet routes
-	tweet := r.Group("tweet")
+	// twit routes
+	twit := r.Group("twit")
 	{
-		tweet.GET("", handler.GetTweets)
-		tweet.POST("", handler.CreateTweet)
-		tweet.PUT(":id", handler.UpdateTweet)
-		tweet.GET(":id", handler.GetTweetByID)
-		tweet.DELETE(":id", handler.DeleteTweet)
-		tweet.GET("user/:id", handler.GetTweetsByUserID)
-		tweet.POST("like/:tweet_id", handler.LikeTweet)
-		tweet.POST("unlike/:tweet_id", handler.UnLikeTweet)
-		tweet.POST("retweet/:tweet_id", handler.RetweetTweet)
-		tweet.POST("unretweet/:tweet_id", handler.UnRetweetTweet)
+		twit.GET("", handler.GetTwits)
+		twit.POST("", handler.CreateTwit)
+		twit.PUT(":id", handler.UpdateTwit)
+		twit.GET(":id", handler.GetTwitByID)
+		twit.DELETE(":id", handler.DeleteTwit)
+		twit.GET("user/:id", handler.GetTwitsByUserID)
+		twit.POST("like/:twit_id", handler.LikeTwit)
+		twit.POST("unlike/:twit_id", handler.UnLikeTwit)
+		twit.POST("retwit/:twit_id", handler.RetwitTwit)
+		twit.POST("unretwit/:twit_id", handler.UnRetwitTwit)
 	}
 
 	// user routes

@@ -1,5 +1,5 @@
 # workspace (GOPATH) configured at /go
-FROM golang:1.19.1-alpine3.16 AS builder
+FROM golang:1.23.1-alpine3.16 AS builder
 
 RUN mkdir -p /app
 WORKDIR /app

@@ -9,13 +9,13 @@ CREATE TABLE  users (
     created_at INT NOT NULL
 );
 
-CREATE TABLE tweets (
+CREATE TABLE twits (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     media_url TEXT, -- optional media 
     likes_count INT DEFAULT 0,
-    retweets_count INT DEFAULT 0 ,
+    retwits_count INT DEFAULT 0 ,
     created_at INT NOT NULL
 );
 
@@ -29,15 +29,15 @@ CREATE TABLE followers (
 
 CREATE TABLE likes (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    tweet_id INT REFERENCES tweets(id) ON DELETE CASCADE,
+    twit_id INT REFERENCES twits(id) ON DELETE CASCADE,
     created_at INT NOT NULL,
-    PRIMARY KEY(user_id, tweet_id)
+    PRIMARY KEY(user_id, twit_id)
 );
 
-CREATE TABLE retweets (
+CREATE TABLE retwis (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    tweet_id INT REFERENCES tweets(id) ON DELETE CASCADE,
+    twit_id INT REFERENCES twits(id) ON DELETE CASCADE,
     created_at INT NOT NULL,
-    UNIQUE(user_id, tweet_id)
+    UNIQUE(user_id, twit_id)
 );

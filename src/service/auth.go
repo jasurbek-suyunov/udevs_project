@@ -3,14 +3,14 @@ package service
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"time"
+
 	"github.com/jasurbek-suyunov/udevs_project/helper"
 	"github.com/jasurbek-suyunov/udevs_project/models"
-	"time"
 )
 
 func (s *Service) CreateUser(ctx context.Context, user *models.UserSignUpRequest) error {
-	// check if user already
+
 	// generate password hash
 	pass_hash, err := helper.GeneratePasswordHash(user.Password)
 
@@ -39,9 +39,8 @@ func (s *Service) CreateUser(ctx context.Context, user *models.UserSignUpRequest
 	// check error
 	if err != nil {
 		return err
-	}	
-	fmt.Println("user_string", string(user_string))
-	fmt.Println("result.Username", result.Username)
+	}
+
 	// set username and user
 	err = s.cache.Redis().Set(ctx, result.Username, string(user_string), time.Hour*24)
 

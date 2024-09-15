@@ -15,7 +15,7 @@ import (
 type Storage struct {
 	db *sqlx.DB
 	user storage.UserI
-	tweet storage.TweetI
+	twit storage.TwitI
 }
 // NewPostgres returns a new instance of the postgres storage.
 func NewPostgres(cfg *config.Config) (storage.StorageI, error) {
@@ -51,10 +51,10 @@ func (s *Storage) User() storage.UserI {
 	}
 	return s.user
 }
-// Tweet returns a new instance of the tweet repository.
-func (s *Storage) Tweet() storage.TweetI {
-	if s.tweet == nil {
-		s.tweet = NewTweetRepo(s.db)
+// Twit returns a new instance of the twit repository.
+func (s *Storage) Twit() storage.TwitI {
+	if s.twit == nil {
+		s.twit = NewTwitRepo(s.db)
 	}
-	return s.tweet
+	return s.twit
 }

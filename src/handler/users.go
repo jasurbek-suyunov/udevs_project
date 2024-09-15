@@ -57,7 +57,7 @@ func (h *Handler) FollowUser(c *gin.Context) {
 
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error following user"})
 		return
 	}
 
@@ -97,7 +97,7 @@ func (h *Handler) UnFollowUser(c *gin.Context) {
 	// check if user is not following
 	isFollowing, err := h.services.IsFollowing(c, userIDInt, follow.FollowedID)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error checking if user is following"})
 		return
 	}
 
@@ -111,7 +111,7 @@ func (h *Handler) UnFollowUser(c *gin.Context) {
 
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error unfollowing user"})
 		return
 	}
 
@@ -139,7 +139,7 @@ func (h *Handler) GetFollowers(c *gin.Context) {
 
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error getting followers"})
 		return
 	}
 
@@ -167,7 +167,7 @@ func (h *Handler) GetFollowing(c *gin.Context) {
 
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error getting following"})
 		return
 	}
 
@@ -207,7 +207,7 @@ func (h *Handler) GetFollowersByUserID(c *gin.Context) {
 	// check if user is already following
 	isFollowing, err := h.services.IsFollowing(c, userIDInt, followUserIDInt)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error checking if user is following"})
 		return
 	}
 
@@ -263,7 +263,7 @@ func (h *Handler) GetFollowingByUserID(c *gin.Context) {
 	// check if user is already following
 	isFollowing, err := h.services.IsFollowing(c, userIDInt, followUserIDInt)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error checking if user is following"})
 		return
 	}
 
@@ -293,7 +293,7 @@ func (h *Handler) Search(c *gin.Context) {
 
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error searching"})
 		return
 	}
 
@@ -313,7 +313,7 @@ func (h *Handler) UploadProfileImage(c *gin.Context) {
 	// Upload to S3
 	fileURL, err := uploadToS3(file, fileHeader, users_folder)
 	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error":"error uploading file"})
 		return
 	}
 	//get user id
@@ -326,7 +326,7 @@ func (h *Handler) UploadProfileImage(c *gin.Context) {
 	// upload file
 	err = h.services.UploadProfileImage(c, userID.(string), fileURL)
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error":"error uploading profile image"})
 		return
 	}
 
