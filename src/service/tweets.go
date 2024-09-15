@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"errors"
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 )
 
 func (s *Service) CreateTweet(ctx context.Context, tweet *models.Tweet) (*models.Tweet, error) {

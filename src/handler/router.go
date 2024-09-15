@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"jas/config"
-	"jas/middleware"
-	"jas/src/service"
-	"jas/src/storage/postgres"
-	"jas/src/storage/redis"
+	"github.com/jasurbek-suyunov/udevs_project/config"
+	"github.com/jasurbek-suyunov/udevs_project/middleware"
+	"github.com/jasurbek-suyunov/udevs_project/src/service"
+	"github.com/jasurbek-suyunov/udevs_project/src/storage/postgres"
+	"github.com/jasurbek-suyunov/udevs_project/src/storage/redis"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +13,7 @@ import (
 )
 
 // SetupRouter sets up the router for the application.
-func SetupRouter() *gin.Engine {
+func SetupRouter(cnf *config.Config) *gin.Engine {
 	r := gin.Default()
 
 	r.NoRoute(func(c *gin.Context) {
@@ -21,9 +21,6 @@ func SetupRouter() *gin.Engine {
 			"message": "page not found",
 		})
 	})
-
-	// get configs
-	cnf := config.NewConfig()
 
 	//amazon s3 storage
 	err := connectS3(cnf)
@@ -64,7 +61,7 @@ func SetupRouter() *gin.Engine {
 		auth.POST("signout", handler.SignOut)
 	}
 
-	//Auth middleware
+	//auth middleware
 	r.Use(middleware.Auth())
 
 	// tweet routes
@@ -85,6 +82,7 @@ func SetupRouter() *gin.Engine {
 	// user routes
 	user := r.Group("user")
 	{
+		user.POST("upload", handler.UploadProfileImage)
 		user.POST("follow", handler.FollowUser)
 		user.POST("unfollow", handler.UnFollowUser)
 		user.GET("followers", handler.GetFollowers)

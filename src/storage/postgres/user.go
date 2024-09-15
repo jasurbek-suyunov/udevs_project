@@ -3,7 +3,7 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 	"log"
 	"time"
 
@@ -12,6 +12,17 @@ import (
 
 type userRepo struct {
 	db *sqlx.DB
+}
+
+// UploadProfileImage implements storage.UserI.
+func (u *userRepo) UploadProfileImage(ctx context.Context, userID string, image string) error {
+	query := `UPDATE users SET profile_image_url = $1 WHERE id = $2`
+	_, err := u.db.Exec(query, image, userID)
+	if err != nil {
+		log.Printf("Method: UploadProfileImage, Error: %v", err)
+		return err
+	}
+	return nil
 }
 
 // Search implements storage.UserI.
@@ -42,7 +53,7 @@ func (u *userRepo) Search(ctx context.Context, query string) ([]models.SearchRes
 func (u *userRepo) GetFollowersList(ctx context.Context, userID int) ([]models.Follow, error) {
 	var users []models.Follow
 
-	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email, u.created_at
+	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email, u.profile_image_url, u.created_at
 	FROM users u
 	JOIN followers f ON u.id = f.follower_id
 	WHERE f.following_id = $1`
@@ -58,7 +69,7 @@ func (u *userRepo) GetFollowersList(ctx context.Context, userID int) ([]models.F
 func (u *userRepo) GetFollowingList(ctx context.Context, userID int) ([]models.Follow, error) {
 	var users []models.Follow
 
-	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email, u.created_at
+	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email, u.profile_image_url, u.created_at
 	FROM users u
 	JOIN followers f ON u.id = f.following_id
 	WHERE f.follower_id = $1`
@@ -86,7 +97,7 @@ func (u *userRepo) FollowUser(ctx context.Context, followerID int, followingID i
 // GetFollowers implements storage.UserI.
 func (u *userRepo) GetFollowers(ctx context.Context, userID int) ([]models.Follow, error) {
 	var users []models.Follow
-	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email , u.created_at
+	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email , u.profile_image_url, u.created_at
 	FROM users u
 	JOIN followers f ON u.id = f.follower_id
 	WHERE f.following_id = $1`
@@ -101,7 +112,7 @@ func (u *userRepo) GetFollowers(ctx context.Context, userID int) ([]models.Follo
 // GetFollowing implements storage.UserI.
 func (u *userRepo) GetFollowing(ctx context.Context, userID int) ([]models.Follow, error) {
 	var users []models.Follow
-	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email, u.created_at
+	query := `SELECT u.id, u.username, u.full_name, u.bio, u.email, u.profile_image_url, u.created_at
 	FROM users u
 	JOIN followers f ON u.id = f.following_id
 	WHERE f.follower_id = $1`
@@ -142,9 +153,8 @@ func (u *userRepo) CreateUser(ctx context.Context, usr *models.User) (*models.Us
 
 	resp := models.User{}
 
-	query := `INSERT INTO users(username, full_name,bio, email, password_hash, created_at) 
+	query := `INSERT INTO users(username, full_name, bio, email, password_hash, created_at) 
 	VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, username, full_name,bio, email, password_hash, created_at `
-
 
 	err := u.db.QueryRow(
 		query,
@@ -192,39 +202,13 @@ func (u *userRepo) DeleteUser(ctx context.Context, uresID string) error {
 	return nil
 }
 
-// GetUserByID implements storage.UserI
-func (u *userRepo) GetUserByID(ctx context.Context, id string) (*models.User, error) {
-
-	var result models.User
-
-	query := `SELECT  id, username, full_name,bio, email, password_hash, created_at FROM users WHERE id = $1`
-
-	if err := u.db.QueryRowContext(
-		ctx,
-		query,
-		id,
-	).Scan(
-		&result.ID,
-		&result.Username,
-		&result.FullName,
-		&result.Bio,
-		&result.Email,
-		&result.PasswordHash,
-		&result.CreatedAt,
-	); err != nil {
-		log.Printf("Method: GetUserByID, Error: %v", err)
-		return nil, err
-	}
-
-	return &result, nil
-}
 
 // GetUserByUsername implements storage.UserI
 func (u *userRepo) GetUserByUsername(ctx context.Context, username string) (*models.User, error) {
 
 	var result models.User
 
-	query := `SELECT id, username, full_name,bio, email, password_hash, created_at  FROM users WHERE username = $1`
+	query := `SELECT id, username, full_name,bio, email, profile_image_url, created_at  FROM users WHERE username = $1`
 
 	err := u.db.QueryRowContext(
 		ctx,
@@ -236,7 +220,7 @@ func (u *userRepo) GetUserByUsername(ctx context.Context, username string) (*mod
 		&result.FullName,
 		&result.Bio,
 		&result.Email,
-		&result.PasswordHash,
+		&result.ProfileImageURL,
 		&result.CreatedAt,
 	)
 
@@ -281,6 +265,7 @@ func (u *userRepo) UpdateUser(ctx context.Context, user *models.User) (*models.U
 	return &result, nil
 }
 
+// NewUserRepo creates a new user repository
 func NewUserRepo(db *sqlx.DB) *userRepo {
 	return &userRepo{db}
 }

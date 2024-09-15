@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 	"github.com/dgrijalva/jwt-go"
 )
 

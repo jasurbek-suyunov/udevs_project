@@ -3,7 +3,7 @@ package postgres
 import (
 	"context"
 	"fmt"
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -203,11 +203,17 @@ func (t *tweetRepo) CreateTweet(ctx context.Context, tweet *models.Tweet) (*mode
 	resp := models.Tweet{}
 
 	// query
-	query := `INSERT INTO tweets (user_id,content , media_url, created_at) VALUES ($1, $2, $3, $4) RETURNING id`
+	query := `INSERT INTO tweets (user_id,content , media_url, created_at) VALUES ($1, $2, $3, $4) RETURNING id,user_id,content,media_url,created_at`
 
 	// exec and scan
 	row := t.db.QueryRowContext(ctx, query, tweet.UserID, tweet.Content, tweet.MediaUrl, tweet.CreatedAt)
-	err := row.Scan(&resp.ID)
+	err := row.Scan(
+		&resp.ID,
+		&resp.UserID,
+		&resp.Content,
+		&resp.MediaUrl,
+		&resp.CreatedAt,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -284,7 +290,7 @@ func (t *tweetRepo) UpdateTweet(ctx context.Context, tweet *models.Tweet) (*mode
 	return &resp, nil
 
 }
-
+// NewTweetRepo creates a new instance of tweetRepo.
 func NewTweetRepo(db *sqlx.DB) *tweetRepo {
 	return &tweetRepo{
 		db: db,

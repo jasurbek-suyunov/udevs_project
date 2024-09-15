@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"jas/config"
-	"jas/src/storage"
+	"github.com/jasurbek-suyunov/udevs_project/config"
+	"github.com/jasurbek-suyunov/udevs_project/src/storage"
 	"os"
 	"time"
 

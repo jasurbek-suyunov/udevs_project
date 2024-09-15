@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"jas/helper"
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/helper"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 	"time"
 )
 

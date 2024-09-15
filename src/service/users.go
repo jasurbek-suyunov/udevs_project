@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 )
 
 func (s *Service) FollowUser(ctx context.Context, follower int, followed int) error {
@@ -91,4 +91,15 @@ func (s *Service) Search(ctx context.Context, query string) ([]models.SearchResu
 	}
 	// return result if no error
 	return result, nil
+}
+
+func (s *Service) UploadProfileImage(ctx context.Context, userID string, url string) error {
+	// upload profile image
+	err := s.storage.User().UploadProfileImage(ctx, userID, url)
+	// check error
+	if err != nil {
+		return err
+	}
+	// return result if no error
+	return nil
 }

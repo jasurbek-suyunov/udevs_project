@@ -1,10 +1,13 @@
 package handler
 
 import (
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+)
+const (
+	users_folder = "users"
 )
 
 func (h *Handler) FollowUser(c *gin.Context) {
@@ -256,7 +259,7 @@ func (h *Handler) GetFollowingByUserID(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "You can't track yourself with id"})
 		return
 	}
-	
+
 	// check if user is already following
 	isFollowing, err := h.services.IsFollowing(c, userIDInt, followUserIDInt)
 	if err != nil {
@@ -296,4 +299,37 @@ func (h *Handler) Search(c *gin.Context) {
 
 	// return result if no error
 	c.JSON(200, gin.H{"result": result})
+}
+
+func (h *Handler) UploadProfileImage(c *gin.Context) {
+	// Parse form file
+	file, fileHeader, err := c.Request.FormFile("file")
+	if err != nil {
+		c.JSON(400, gin.H{"error": "No file is received"})
+		return
+	}
+	defer file.Close()
+
+	// Upload to S3
+	fileURL, err := uploadToS3(file, fileHeader, users_folder)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	//get user id
+	userID, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(400, gin.H{"error": "user_id not found"})
+		return
+	}
+
+	// upload file
+	err = h.services.UploadProfileImage(c, userID.(string), fileURL)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	// return result if no error
+	c.JSON(200, gin.H{"url": fileURL})
 }

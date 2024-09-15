@@ -52,6 +52,7 @@ func (c *cache) Set(ctx context.Context, key string, value string, expTime time.
 	return nil
 }
 
+// NewCache creates a new cache
 func NewCache(rdb *redis.Client) *cache {
 	return &cache{rdb}
 }

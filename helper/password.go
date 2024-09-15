@@ -2,6 +2,7 @@ package helper
 
 import "golang.org/x/crypto/bcrypt"
 
+// Generates a password hash
 func GeneratePasswordHash(password string) (string, error) {
 	password_bytes := []byte(password)
 

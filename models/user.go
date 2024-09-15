@@ -26,6 +26,7 @@ type UserResponse struct {
 	FullName  string `json:"full_name"`
 	Bio 	  string `json:"bio"`
 	Email     string `json:"email"`
+	ProfileImageURL string `json:"profile_image_url"`
 	CreatedAt int64  `json:"created_at"`
 }
 

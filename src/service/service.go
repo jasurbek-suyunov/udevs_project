@@ -1,6 +1,6 @@
 package service
 
-import "jas/src/storage"
+import "github.com/jasurbek-suyunov/udevs_project/src/storage"
 
 type Service struct {
 	storage storage.StorageI

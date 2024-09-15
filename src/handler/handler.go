@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"jas/src/service"
+	"github.com/jasurbek-suyunov/udevs_project/src/service"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,8 +2,8 @@ package postgres
 
 import (
 	"fmt"
-	"jas/config"
-	"jas/src/storage"
+	"github.com/jasurbek-suyunov/udevs_project/config"
+	"github.com/jasurbek-suyunov/udevs_project/src/storage"
 	"log"
 	"time"
 
@@ -17,6 +17,7 @@ type Storage struct {
 	user storage.UserI
 	tweet storage.TweetI
 }
+// NewPostgres returns a new instance of the postgres storage.
 func NewPostgres(cfg *config.Config) (storage.StorageI, error) {
 	psqlConnString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
 		cfg.PostgresHost,
@@ -43,14 +44,14 @@ func NewPostgres(cfg *config.Config) (storage.StorageI, error) {
 		db: db,
 	}, nil
 }
-
+// User returns a new instance of the user repository.
 func (s *Storage) User() storage.UserI {
 	if s.user == nil {
 		s.user = NewUserRepo(s.db)
 	}
 	return s.user
 }
-
+// Tweet returns a new instance of the tweet repository.
 func (s *Storage) Tweet() storage.TweetI {
 	if s.tweet == nil {
 		s.tweet = NewTweetRepo(s.db)

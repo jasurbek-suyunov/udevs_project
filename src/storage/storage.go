@@ -2,7 +2,7 @@ package storage
 
 import (
 	"context"
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 	"time"
 )
 
@@ -15,8 +15,8 @@ type UserI interface {
 	// user
 	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
 	UpdateUser(ctx context.Context, user *models.User) (*models.User, error)
+	UploadProfileImage(ctx context.Context, userID string, image string) error
 	DeleteUser(ctx context.Context, urerID string) error
-	GetUserByID(ctx context.Context, id string) (*models.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
 	// follow
 	FollowUser(ctx context.Context, followerID, followingID int) error

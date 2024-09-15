@@ -1,11 +1,11 @@
 package middleware
 
 import (
-	"jas/helper"
+	"github.com/jasurbek-suyunov/udevs_project/helper"
 
 	"github.com/gin-gonic/gin"
 )
-
+// Auth is a middleware to check if user is authenticated
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString, err := c.Cookie("token")

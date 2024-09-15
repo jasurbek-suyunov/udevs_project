@@ -2,33 +2,33 @@ package handler
 
 import (
 	"errors"
-	"fmt"
-	"jas/helper"
-	"jas/models"
-	"net/http"
+	"github.com/jasurbek-suyunov/udevs_project/helper"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	tweets_folder = "tweets"
+)
+
 func (h *Handler) CreateTweet(c *gin.Context) {
+
 	// Parse form file
 	file, fileHeader, err := c.Request.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No file is received"})
+		c.JSON(400, gin.H{"error": "No file is received"})
 		return
 	}
 	defer file.Close()
-	// get "tweet" from the form data
+
+	// Get tweet
 	tweet := c.PostForm("tweet")
-	fmt.Println(tweet)
-	// Folder name where the file will be saved
-	folder := "test"
+
 	// Upload to S3
-	// how to use .png or .jpg or video file
-	fmt.Println(fileHeader.Filename)
-	fileURL, err := uploadToS3(file, fileHeader, folder)
+	fileURL, err := uploadToS3(file, fileHeader, tweets_folder)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 	//get user id
@@ -127,7 +127,6 @@ func (h *Handler) UpdateTweet(c *gin.Context) {
 		ID:        tweetID,
 		UserID:    userID.(string),
 		Content:   tweet.Content,
-		MediaUrl:  tweet.MediaUrl,
 		CreatedAt: helper.GetCurrentTime(),
 	}
 

@@ -1,13 +1,12 @@
 package handler
 
 import (
-	"jas/helper"
-	"jas/models"
+	"github.com/jasurbek-suyunov/udevs_project/helper"
+	"github.com/jasurbek-suyunov/udevs_project/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
-
 func (h *Handler) SignUp(c *gin.Context) {
 	// variable
 	var user models.UserSignUpRequest
@@ -20,7 +19,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 
 	//checking password and confirm password
 	if user.Password != user.ConfirmPassword {
-		c.JSON(http.StatusBadRequest, models.Error{
+		c.JSON(400, models.Error{
 			Error: "Password and Confirm Password does not match",
 		})
 		return
@@ -85,12 +84,13 @@ func (h *Handler) SignIn(c *gin.Context) {
 	c.SetCookie("token", token, 36000, "/", "localhost", false, false)
 	c.JSON(http.StatusOK, &models.LoginResponse{
 		Data: &models.UserResponse{
-			ID:        user.ID,
-			Username:  user.Username,
-			FullName:  user.FullName,
-			Bio:       user.Bio,
-			Email:     user.Email,
-			CreatedAt: user.CreatedAt,
+			ID:              user.ID,
+			Username:        user.Username,
+			FullName:        user.FullName,
+			Bio:             user.Bio,
+			Email:           user.Email,
+			ProfileImageURL: user.ProfileImageURL,
+			CreatedAt:       user.CreatedAt,
 		},
 		Error: "",
 		Code:  0,
