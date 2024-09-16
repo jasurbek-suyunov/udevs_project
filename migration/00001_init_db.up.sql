@@ -34,7 +34,7 @@ CREATE TABLE likes (
     PRIMARY KEY(user_id, twit_id)
 );
 
-CREATE TABLE retwis (
+CREATE TABLE retwits (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     twit_id INT REFERENCES twits(id) ON DELETE CASCADE,

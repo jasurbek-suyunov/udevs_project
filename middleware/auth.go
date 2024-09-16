@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
 // Auth is a middleware to check if user is authenticated
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {

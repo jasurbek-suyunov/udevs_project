@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/jasurbek-suyunov/udevs_project/helper"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
 func (h *Handler) SignUp(c *gin.Context) {
 	// variable
 	var user models.UserSignUpRequest
@@ -33,7 +33,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 	// check error
 	if err != nil {
 		c.JSON(400, models.Error{
-			Error:"error creating user"	,
+			Error: "error creating user",
 		})
 		return
 	}
@@ -67,7 +67,6 @@ func (h *Handler) SignIn(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(user.PasswordHash)
 	// check password
 	if !helper.CheckPassword(user.PasswordHash, login.Password) {
 		c.JSON(401, models.Error{
@@ -83,7 +82,7 @@ func (h *Handler) SignIn(c *gin.Context) {
 	}
 	token := helper.GenerateJWT(param)
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("token", token, 36000, "/", "localhost", false, false)
+	c.SetCookie("token", token, 36000, "", "", false, false)
 	c.JSON(http.StatusOK, &models.LoginResponse{
 		Data: &models.UserResponse{
 			ID:              user.ID,
