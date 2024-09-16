@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+
 	"github.com/jasurbek-suyunov/udevs_project/helper"
 	"github.com/jasurbek-suyunov/udevs_project/models"
 
@@ -49,7 +50,7 @@ func (h *Handler) CreateTwit(c *gin.Context) {
 	createdTwit, err := h.services.CreateTwit(c, &twitModel)
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error creating twit"})
+		c.JSON(400, gin.H{"error": "error creating twit"})
 		return
 	}
 
@@ -59,17 +60,20 @@ func (h *Handler) CreateTwit(c *gin.Context) {
 
 func (h *Handler) GetTwitsByUserID(c *gin.Context) {
 	//get user id
-	userID, ok := c.Get("user_id")
+	userID := c.Param("id")
+
+	// check user id
+	ok := helper.CheckIntegers(userID)
 	if !ok {
 		c.JSON(400, gin.H{"error": "user_id not found"})
 		return
 	}
 
 	// get twits
-	twits, err := h.services.GetTwitsByUserID(c, userID.(string))
+	twits, err := h.services.GetTwitsByUserID(c, userID)
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error getting twits"})
+		c.JSON(400, gin.H{"error": "error getting twits"})
 		return
 	}
 
@@ -95,7 +99,7 @@ func (h *Handler) DeleteTwit(c *gin.Context) {
 	err := h.services.DeleteTwit(c, userID.(string), twitID)
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error deleting twit"})
+		c.JSON(400, gin.H{"error": "error deleting twit"})
 		return
 	}
 
@@ -134,7 +138,7 @@ func (h *Handler) UpdateTwit(c *gin.Context) {
 	updatedTwit, err := h.services.UpdateTwit(c, &twitModel)
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error updating twit"})
+		c.JSON(400, gin.H{"error": "error updating twit"})
 		return
 	}
 
@@ -146,11 +150,18 @@ func (h *Handler) GetTwitByID(c *gin.Context) {
 	//get twit id
 	twitID := c.Param("id")
 
+	// check twit id
+	ok := helper.CheckIntegers(twitID)
+	if !ok {
+		c.JSON(400, gin.H{"error": "twit_id not found"})
+		return
+	}
+
 	// get twit
 	twit, err := h.services.GetTwitByID(c, twitID)
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error": "error getting twit"})
 		return
 	}
 
@@ -170,7 +181,7 @@ func (h *Handler) GetTwits(c *gin.Context) {
 	twits, err := h.services.GetTwits(c, userID.(string))
 	// check error
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error getting twits"})
+		c.JSON(400, gin.H{"error": "error getting twits"})
 		return
 	}
 
@@ -188,14 +199,17 @@ func (h *Handler) LikeTwit(c *gin.Context) {
 
 	// get twit id
 	twitID := c.Param("twit_id")
-	if len(twitID) == 0 {
-		c.JSON(400, gin.H{"error": errors.New("invalid twit id")})
+
+	// check twit id
+	ok = helper.CheckIntegers(twitID)
+	if !ok {
+		c.JSON(400, gin.H{"error": "twit_id not found"})
 		return
 	}
 
 	err := h.services.LikeTwit(c, userID.(string), twitID)
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error saving like"})
+		c.JSON(400, gin.H{"error": "error saving like"})
 		return
 	}
 
@@ -212,14 +226,16 @@ func (h *Handler) UnLikeTwit(c *gin.Context) {
 
 	// get twit id
 	twitID := c.Param("twit_id")
-	if len(twitID) == 0 {
-		c.JSON(400, gin.H{"error": errors.New("invalid twit id")})
+	// check twit id
+	ok =helper.CheckIntegers(twitID)
+	if !ok {
+		c.JSON(400, gin.H{"error": "twit_id not found"})
 		return
 	}
 
 	err := h.services.UnLikeTwit(c, userID.(string), twitID)
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error saving unlike"})
+		c.JSON(400, gin.H{"error": "error saving unlike"})
 		return
 	}
 
@@ -236,14 +252,15 @@ func (h *Handler) RetwitTwit(c *gin.Context) {
 
 	// get twit id
 	twitID := c.Param("twit_id")
-	if len(twitID) == 0 {
-		c.JSON(400, gin.H{"error": errors.New("invalid twit id")})
+	// check twit id
+	ok =helper.CheckIntegers(twitID)
+	if !ok {
+		c.JSON(400, gin.H{"error": "twit_id not found"})
 		return
 	}
-
 	err := h.services.RetwitTwit(c, userID.(string), twitID)
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error saving retwit"})
+		c.JSON(400, gin.H{"error": "error saving retwit"})
 		return
 	}
 
@@ -260,14 +277,17 @@ func (h *Handler) UnRetwitTwit(c *gin.Context) {
 
 	// get twit id
 	twitID := c.Param("twit_id")
-	if len(twitID) == 0 {
-		c.JSON(400, gin.H{"error": errors.New("invalid twit id")})
+	// check twit id
+	ok =helper.CheckIntegers(twitID)
+	if !ok {
+		c.JSON(400, gin.H{"error": "twit_id not found"})
 		return
 	}
 
+
 	err := h.services.UnRetwitTwit(c, userID.(string), twitID)
 	if err != nil {
-		c.JSON(400, gin.H{"error":"error saving unretwit"})
+		c.JSON(400, gin.H{"error": "error saving unretwit"})
 		return
 	}
 

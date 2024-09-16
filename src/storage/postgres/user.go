@@ -208,7 +208,7 @@ func (u *userRepo) GetUserByUsername(ctx context.Context, username string) (*mod
 
 	var result models.User
 
-	query := `SELECT id, username, full_name,bio, email, profile_image_url, created_at  FROM users WHERE username = $1`
+	query := `SELECT id, username, full_name,bio, email, profile_image_url, password_hash, created_at  FROM users WHERE username = $1`
 
 	err := u.db.QueryRowContext(
 		ctx,
@@ -221,6 +221,7 @@ func (u *userRepo) GetUserByUsername(ctx context.Context, username string) (*mod
 		&result.Bio,
 		&result.Email,
 		&result.ProfileImageURL,
+		&result.PasswordHash,
 		&result.CreatedAt,
 	)
 

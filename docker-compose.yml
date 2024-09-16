@@ -31,8 +31,8 @@ services:
     api:
         build:
             context: .
-            dockerfile: Dockerfile
-        # image: jasurbe/najottalim:latest
+            #dockerfile: Dockerfile
+        image: jasurbe/udevs_task:latest
         ports:
             - "8000:8000"
         env_file:
@@ -46,7 +46,7 @@ services:
         depends_on:
             - postgres
         restart: always
-
+ 
 volumes:
     pgdata:
     redis: 

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -52,7 +52,7 @@ func getOrReturnDefaultValue(key string, defaultValue interface{}) interface{} {
 
 func NewConfig() *Config {
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading .env file")
+		fmt.Println("No .env file found")
 	}
 
 	cnf := Config{}

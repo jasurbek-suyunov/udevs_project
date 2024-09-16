@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/jasurbek-suyunov/udevs_project/helper"
 	"github.com/jasurbek-suyunov/udevs_project/models"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +22,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 	//checking password and confirm password
 	if user.Password != user.ConfirmPassword {
 		c.JSON(400, models.Error{
-			Error: "Password and Confirm Password does not match",
+			Error: "password and confirm password does not match",
 		})
 		return
 	}
@@ -31,7 +33,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 	// check error
 	if err != nil {
 		c.JSON(400, models.Error{
-			Error: err.Error(),
+			Error:"error creating user"	,
 		})
 		return
 	}
@@ -61,15 +63,15 @@ func (h *Handler) SignIn(c *gin.Context) {
 	// check error
 	if err != nil {
 		c.JSON(404, models.Error{
-			Error: "Invalid username: " + err.Error(),
+			Error: "invalid username",
 		})
 		return
 	}
-
+	fmt.Println(user.PasswordHash)
 	// check password
 	if !helper.CheckPassword(user.PasswordHash, login.Password) {
 		c.JSON(401, models.Error{
-			Error: "Invalid password",
+			Error: "invalid password",
 		})
 		return
 	}

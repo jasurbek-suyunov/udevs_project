@@ -1,12 +1,13 @@
 package handler
 
 import (
+	"log"
+
 	"github.com/jasurbek-suyunov/udevs_project/config"
 	"github.com/jasurbek-suyunov/udevs_project/middleware"
 	"github.com/jasurbek-suyunov/udevs_project/src/service"
 	"github.com/jasurbek-suyunov/udevs_project/src/storage/postgres"
 	"github.com/jasurbek-suyunov/udevs_project/src/storage/redis"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -14,11 +15,11 @@ import (
 
 // SetupRouter sets up the router for the application.
 func SetupRouter(cnf *config.Config) *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
-	r := gin.New()
+	//	gin.SetMode(gin.ReleaseMode)
+	r := gin.Default()
 
 	r.NoRoute(func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		c.JSON(404, gin.H{
 			"message": "page not found",
 		})
 	})
@@ -54,8 +55,11 @@ func SetupRouter(cnf *config.Config) *gin.Engine {
 	//routes
 	r.GET("/ping", handler.Ping)
 
+	//api version v1 routes
+	api := r.Group("api/v1")
+
 	// auth routes
-	auth := r.Group("auth")
+	auth := api.Group("auth")
 	{
 		auth.POST("singup", handler.SignUp)
 		auth.POST("signin", handler.SignIn)
@@ -63,10 +67,7 @@ func SetupRouter(cnf *config.Config) *gin.Engine {
 	}
 
 	//auth middleware
-	r.Use(middleware.Auth())
-
-	//api version v1 routes
-	api := r.Group("api/v1")
+	api.Use(middleware.Auth())
 
 	// twit routes
 	twit := api.Group("twit")

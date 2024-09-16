@@ -33,34 +33,34 @@ const (
 	readTimeout = 10 * time.Second // 10 seconds
 )
 
-func NewRedisCache(cfg *config.Config) (storage.CacheStorageI, error) {
+	func NewRedisCache(cfg *config.Config) (storage.CacheStorageI, error) {
 
-	// ...1: creating context
-	var ctx context.Context = context.Background()
+		// ...1: creating context
+		var ctx context.Context = context.Background()
 
-	val := os.Getenv("REDIS_POOL_SIZE")
-	if val == "" {
-		return nil, errors.New("REDIS_POOL_SIZE not set")
+		val := os.Getenv("REDIS_POOL_SIZE")
+		if val == "" {
+			return nil, errors.New("REDIS_POOL_SIZE not set")
+		}
+
+		// ...2: opening connection to redis
+		rdb := redis.NewClient(&redis.Options{
+			Addr:        fmt.Sprintf("%s:%s", cfg.RedisHost, cfg.RedisPort),
+			Password:    "",                      // no password set
+			DB:          cast.ToInt(cfg.RedisDB), // use default DB
+			PoolTimeout: readTimeout,
+			PoolSize:    cast.ToInt(cfg.RedisPoolSize),
+		})
+
+		// ...3: checking connection
+		pong := rdb.Ping(ctx)
+		_, err := pong.Result()
+		if err != nil {
+			return nil, errors.New("cannot connect to redis")
+		}
+
+		// ...4: returning redis cache db
+		return &RedisCache{
+			rdb: rdb,
+		}, nil
 	}
-
-	// ...2: opening connection to redis
-	rdb := redis.NewClient(&redis.Options{
-		Addr:        fmt.Sprintf("%s:%s", cfg.RedisHost, cfg.RedisPort),
-		Password:    "",                      // no password set
-		DB:          cast.ToInt(cfg.RedisDB), // use default DB
-		PoolTimeout: readTimeout,
-		PoolSize:    cast.ToInt(cfg.RedisPoolSize),
-	})
-
-	// ...3: checking connection
-	pong := rdb.Ping(ctx)
-	_, err := pong.Result()
-	if err != nil {
-		return nil, errors.New("cannot connect to redis")
-	}
-
-	// ...4: returning redis cache db
-	return &RedisCache{
-		rdb: rdb,
-	}, nil
-}
